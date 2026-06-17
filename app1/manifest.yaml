@@ -38,11 +38,11 @@ metadata:
 spec:
   ingressClassName: alb
   rules:
-  - host: "app1.devopsprocloud.in"
+  - host: app1.devopsprocloud.in
     http:
       paths:
       - pathType: Prefix
-        path: "/"
+        path: /
         backend:
           service:
             name: app1
