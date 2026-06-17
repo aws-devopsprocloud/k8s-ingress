@@ -18,7 +18,6 @@ kind: Service
 metadata:
   name: app2
 spec: 
-  type: LoadBalancer 
   selector: 
     component: app2
   ports: 
