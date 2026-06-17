@@ -1,0 +1,52 @@
+apiVersion: v1 
+kind: Pod 
+metadata: 
+  name: app1 
+  namespace: roboshop 
+  labels:
+    component: app1
+spec:
+  containers: 
+  - name: app1  
+    image: devopsprocloudaws/app1:v1
+    ports:
+    - containerPort: 80 
+
+--- 
+apiVersion: v1 
+kind: Service 
+metadata:
+  name: app1
+spec: 
+  type: LoadBalancer 
+  selector: 
+    component: app1
+  ports: 
+  - protocol: TCP
+    port: 80 # service port 
+    targetPort: 80 # container port 
+
+--- 
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app1
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/tags: Environment=dev,Project=roboshop
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/group.name: roboshop
+spec:
+  ingressClassName: alb
+  rules:
+  - host: "app1.devopsprocloud.in"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: app1
+            port:
+              number: 80
+ 
