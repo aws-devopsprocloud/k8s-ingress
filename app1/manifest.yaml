@@ -1,29 +1,51 @@
-apiVersion: v1 
-kind: Pod 
-metadata: 
-  name: app1 
+# apiVersion: v1 
+# kind: Pod 
+# metadata: 
+#   name: app1 
+#   labels:
+#     component: app1
+# spec:
+#   containers: 
+#   - name: app1  
+#     image: devopsprocloudaws/app1:v1
+#     ports:
+#     - containerPort: 80 
+
+# --- 
+# apiVersion: v1 
+# kind: Service 
+# metadata:
+#   name: app1
+# spec: 
+#   selector: 
+#     component: app1
+#   ports: 
+#   - protocol: TCP
+#     port: 80 # service port 
+#     targetPort: 80 # container port 
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app1
+  # these labels are replicaset labels
   labels:
     component: app1
 spec:
-  containers: 
-  - name: app1  
-    image: devopsprocloudaws/app1:v1
-    ports:
-    - containerPort: 80 
-
---- 
-apiVersion: v1 
-kind: Service 
-metadata:
-  name: app1
-spec: 
-  selector: 
-    component: app1
-  ports: 
-  - protocol: TCP
-    port: 80 # service port 
-    targetPort: 80 # container port 
-
+  replicas: 2
+  selector:
+    # using these labels replica set selects the pod
+    matchLabels:
+      component: app1
+  # This is pod definition, pod is subset of replicaset
+  template:
+    metadata:
+      labels:
+        component: app1
+    spec:
+      containers:
+      - name: app1
+        image: devopsprocloudaws/app1:v1
 --- 
 apiVersion: networking.k8s.io/v1
 kind: Ingress
